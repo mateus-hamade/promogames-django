@@ -1,5 +1,9 @@
 from django.shortcuts import render
 
+from .models import main_page
+
 # Create your views here.
-def index(request):
-    return render(request, 'main_page/index.html')
+def main(request):
+    cards = main_page.objects.all()
+
+    return render(request, 'main_page/main.html', {'cards': cards})
