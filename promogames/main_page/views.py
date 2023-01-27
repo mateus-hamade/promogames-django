@@ -10,7 +10,5 @@ def main(request):
 
     if search:
         cards = cards.filter(title__icontains=search)
-
-    print(cards)
-
+        
     return render(request, 'main_page/main.html', {'cards': cards})
