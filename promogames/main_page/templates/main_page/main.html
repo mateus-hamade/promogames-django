@@ -1,46 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="mb-10">
+<div class="mb-10 font">
     <div class="pt-32  bg-white">
         <h1 class="text-center text-2xl font-bold text-amber-400 font">Todas as promoções</h1>
     </div>
     
     <div class="flex justify-center">
-        <div class="flex items-center w-1/2 mt-5">
-            <input type="text" class="w-full px-4 py-2 border rounded-l-lg text-gray-700 focus:outline-none" placeholder="Pesquisar">
-            <button type="button" class="px-4 py-2 bg-gray-700 text-white rounded-r-lg hover:bg-amber-400 focus:outline-none">Pesquisar</button>
-        </div>
+        <form class="flex items-center w-1/2 mt-5" method="GET" id="search-form">
+            <input type="text" id="search" name="search" class="w-full px-4 py-2 border rounded-l-lg text-gray-700 focus:outline-none" placeholder="Pesquisar">
+            <button type="button" class="px-4 py-2 bg-gray-700 text-white rounded-r-lg hover:bg-amber-400 focus:outline-none" id="search-btn">Pesquisar</button>
+        </form>
     </div>
 </div>
 
+{% if not cards %}
+    <div class="flex justify-center mt-28 mb-28">
+        <h1 class="text-center text-2xl font-bold text-amber-400 font">Nenhum resultado encontrado</h1>
+    </div>
+{% elif cards %}
 <section class="py-10 bg-gray-100 font">
     <div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% for card in cards %}
-        <article class="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
-            <a href="#">
-                <div class="relative flex items-end overflow-hidden rounded-xl">
-                    <img src={{card.image_url}}/>
-                </div>
-        
-                <div class="mt-1 p-3">
-                    <h2 class="text-slate-700">{{card.title}}</h2>
-                    <p class="mt-1 text-sm text-slate-400">{{card.store}}</p>
-        
-                    <div class="mt-3 flex items-center justify-between">
-                        <div class="flex justify-between flex-col">
-                            <span class="text-sm text-slate-400 line-through">R${{card.price}}</span>
-                            <span class="text-lg font-bold text-amber-400">R${{card.discount_price}}</span>
-                        </div>
+            <article class="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
+                <a href="#">
+                    <div class="relative flex items-end overflow-hidden rounded-xl">
+                        <img src={{card.image_url}}/>
+                    </div>
             
-                        <div class="flex items-center space-x-1.5 rounded-lg bg-gray-700 px-4 py-1.5 text-white duration-100 hover:bg-amber-400">
-                            <a href="{{card.link_url}}" target="_blank">
-                                <button class="text-sm">Comprar</button>
-                            </a>
+                    <div class="mt-1 p-3">
+                        <h2 class="text-slate-700">{{card.title}}</h2>
+                        <p class="mt-1 text-sm text-slate-400">{{card.store}}</p>
+            
+                        <div class="mt-3 flex items-center justify-between">
+                            <div class="flex justify-between flex-col">
+                                <span class="text-sm text-slate-400 line-through">R${{card.price}}</span>
+                                <span class="text-lg font-bold text-amber-400">R${{card.discount_price}}</span>
+                            </div>
+                
+                            <div class="flex items-center space-x-1.5 rounded-lg bg-gray-700 px-4 py-1.5 text-white duration-100 hover:bg-amber-400">
+                                <a href="{{card.link_url}}" target="_blank">
+                                    <button class="text-sm">Comprar</button>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </a>
-        </article>
+                </a>
+            </article>
         {% endfor %}
 </section>
+{% endif %}
+
 {% endblock %}
