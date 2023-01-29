@@ -20,7 +20,7 @@ def main(request):
 def script(request):
     for data in get_data():
         try:
-            aux = main_page(title=data['title'], store='Steam', price=data['original_price'], image_url='https://picsum.photos/200/150', link_url='http://google.com', discount_price=data['discount_price'])
+            aux = main_page(title=data['title'], store='Steam', price=data['original_price'], image_url=data['image_link'], link_url=data['link_url'], discount_price=data['discount_price'])
             aux.save()
         except Exception:
             pass
