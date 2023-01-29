@@ -52,12 +52,9 @@ def get_data():
         original_price = ''.join(original_price)
         discount_price = ''.join(discount_price)
 
-        complet_list.append([title, date, discount, original_price, discount_price])
-    
-    # print(complet_list)
+        complet_list.append({"title": title, "date": date, "discount": discount, "original_price": original_price, "discount_price": discount_price})
 
     return complet_list
-
 
 def remove_tags(text):
     return ''.join(xml.etree.ElementTree.fromstring(text).itertext())

@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class main_page(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, unique=True)
     store = models.CharField(max_length=100)
     price = models.CharField(max_length=100)
     image_url = models.CharField(max_length=100)
