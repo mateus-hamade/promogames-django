@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models import main_page
+from .models import Game
 
 from django.http import HttpResponse
 
@@ -10,7 +10,7 @@ from .script import get_data
 def main(request):
     search = request.GET.get('search')
 
-    cards = main_page.objects.all()
+    cards = Game.objects.all()
 
     if search:
         cards = cards.filter(title__icontains=search)
@@ -20,7 +20,7 @@ def main(request):
 def script(request):
     for data in get_data():
         try:
-            aux = main_page(title=data['title'], store='Steam', price=data['original_price'], image_url=data['image_link'], link_url=data['link_url'], discount_price=data['discount_price'])
+            aux = Game(title=data['title'], store='Steam', price=data['original_price'], image_url=data['image_link'], link_url=data['link_url'], discount_price=data['discount_price'])
             aux.save()
         except Exception:
             pass

@@ -1,7 +1,7 @@
 from django.db import models
 
 # Create your models here.
-class main_page(models.Model):
+class Game(models.Model):
     title = models.CharField(max_length=100, unique=True)
     store = models.CharField(max_length=100)
     price = models.CharField(max_length=100)
