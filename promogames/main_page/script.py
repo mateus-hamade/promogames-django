@@ -1,82 +1,52 @@
-import bs4 as bs
-import urllib.request
-import xml.etree.ElementTree
-
-import numpy as np
+import requests
+from bs4 import BeautifulSoup
 import pandas as pd
 
 def get_data():
-    # abrindo uma conexão
-    my_url = urllib.request.urlopen('https://store.steampowered.com/search/?sort_by=_ASC&ignore_preferences=1&specials=1&hidef2p=1&supportedlang=portuguese%2Cbrazilian&category1=998&os=win').read()
+    # Faz a requisição à página da Steam
+    url = "https://store.steampowered.com/search/?supportedlang=portuguese&category1=998&specials=1&ndl=1"
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, "html.parser")
 
-    # transformando em um objeto BeautifulSoup
-    soup = bs.BeautifulSoup(my_url, 'lxml')
+    # Cria uma lista para armazenar os dados dos jogos
+    games = []
 
-    # recuperando os dados
-    data = soup.find_all('div', {'class': 'responsive_search_name_combined'})
+    # Encontra todos os jogos na página
+    soup = BeautifulSoup(page.content, "html.parser")
 
-    # pegando o href de cada jogo
-    tag = soup.find_all('a', {'class': 'search_result_row ds_collapse_flag'})
-    link = [x['href'] for x in tag]
+    # Encontra todos os jogos na página
+    results = soup.find("div", {"class": "search_results"})
+    game_containers = results.find_all("a", {"class": "search_result_row"})
 
-    # pegar imagem de cada link
-    image = []
-    for i in range(len(link)):
-        url_image = urllib.request.urlopen(link[i]).read()
-
-        soup_image = bs.BeautifulSoup(url_image, 'lxml')
-
-        tag_image = soup_image.find_all('img', {'class': 'game_header_image_full'})
-
-        image.append([x['src'] for x in tag_image])
-
-    # remove the tags from the data
-    data = [remove_tags(str(x)) for x in data]
-
-    # remove the \t and \n from the data
-    data = [x.strip() for x in data]
-    data = [x.split('\n') for x in data]
-
-    complet_list = []
-
-    for i in range(len(data)):
-        #apagar posição
-        if len(data[i]) < 15:
-            continue
-
-        title = data[i][0]
-        date = data[i][4]
-        discount = data[i][11]
-        original_price = []
-        discount_price = []
-
-        block = 0
+    # Itera sobre cada jogo e coleta os dados desejados
+    for game in game_containers:
+        name = game.find("span", {"class": "title"}).get_text()
         
-        for j in range(len(data[i][14])-1, -1, -1):
-            if block == 0:
-                if data[i][14][j] == 'R':
-                    block = 1   
-                discount_price.append(data[i][14][j])
-            else:
-                original_price.append(data[i][14][j])
+        if game.find("strike") is not None:
+            original_price = game.find("strike").get_text()
 
-        
-        original_price = original_price[::-1]
-        discount_price = discount_price[::-1]
+        if game.find("div", {"class": "col search_price discounted responsive_secondrow"}) is not None:
+            discount_price = game.find("div", {"class": "col search_price discounted responsive_secondrow"}).get_text().strip()
 
-        original_price = ''.join(original_price)
-        discount_price = ''.join(discount_price)
+            discount_price = discount_price.split("R$")[1:][1] # Pega o preço com desconto
 
-        link_image = str(image[i])[1:-1].replace("'", "")
+        url = game["href"]
 
-        link_url = link[i]
+        image_url = get_image(url)
 
-        complet_list.append({"title": title, "discount": discount, "original_price": original_price, "image_link": link_image, "link_url": link_url, "discount_price": discount_price})
+        games.append([name, original_price, discount_price, image_url, url])
 
-    return complet_list
+    # Cria um dataframe a partir da lista de jogos
+    df = pd.DataFrame(games, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original"])
 
-def remove_tags(text):
-    return ''.join(xml.etree.ElementTree.fromstring(text).itertext())
-
+    return df
+    
+def get_image(url):
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, "html.parser")
+    image_container = soup.find("img", {"class": "game_header_image_full"})
+    
+    return image_container["src"]
+    
 if __name__ == '__main__':
     get_data()

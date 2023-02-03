@@ -18,10 +18,16 @@ def main(request):
     return render(request, 'main_page/main.html', {'cards': cards})
 
 def script(request):
-    for data in get_data():
-        try:
-            aux = Game(title=data['title'], store='Steam', price=data['original_price'], image_url=data['image_link'], link_url=data['link_url'], discount_price=data['discount_price'])
-            aux.save()
-        except Exception:
-            pass
+    df = get_data()
+    # to save the data in the database
+    for index, row in df.iterrows():
+        game = Game(
+            title = row['Nome do jogo'], 
+            price = row['Preço original'],
+            store = 'Steam',
+            discount_price = row['Preço com promoção'],
+            image_url = row['URL da imagem'],
+            link_url =row['URL do site original'])
+        game.save()
+
     return HttpResponse("Script executado com sucesso!")
