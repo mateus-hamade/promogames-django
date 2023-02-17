@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- component -->
+<div class="flex h-screen w-full items-center justify-center bg-gray-200 bg-cover">
+    <div class="rounded-xl bg-slate-400 bg-opacity-50 px-16 py-10 shadow-lg backdrop-blur-md max-sm:px-8">
+        <div class="text-slate-700">
+            <div class="mb-8 flex flex-col items-center font">
+                <img src="https://cdn-icons-png.flaticon.com/512/8853/8853769.png" class="w-11 mr-2">
+                <h1 class="mb-2 text-2xl">PromoGames</h1>
+                <span class="text-amber-400 tracking-wide">Entrar</span>
+            </div>
+            <form method="POST" class="space-y-6 flex flex-col items-center">
+                <div class="flex flex-col justify-center space-y-2 items-end">
+                    {% csrf_token %}
+                    {{ form.as_p}}
+                </div>
+                
+                <input type="hidden" name="next" value="{{ next }}">
+                <button type="submit" class="mr-3 hidden bg-gray-700 py-1.5 px-6 text-center text-sm font-medium text-white hover:bg-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-300 md:mr-0 md:inline-block rounded-lg hover:transform hover:scale-105 duration-300 font">Entrar</button>
+            </form>
+        </div>
+    </div>
+</div>    
+{% endblock %}
