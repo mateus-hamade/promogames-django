@@ -14,7 +14,7 @@ def main(request):
 
     if search:
         cards = cards.filter(title__icontains=search)
-        
+
     return render(request, 'main_page/main.html', {'cards': cards})
 
 def script(request):
@@ -27,7 +27,8 @@ def script(request):
             store = 'Steam',
             discount_price = row['Preço com promoção'],
             image_url = row['URL da imagem'],
-            link_url =row['URL do site original'])
+            link_url =row['URL do site original'],
+            tag = row['Primeiro marcador'])
         game.save()
 
     return HttpResponse("Script executado com sucesso!")

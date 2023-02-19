@@ -4,8 +4,16 @@ import pandas as pd
 
 def get_data():
     # Faz a requisição à página da Steam
-    url = "https://store.steampowered.com/search/?supportedlang=portuguese&category1=998&specials=1&ndl=1"
-    page = requests.get(url)
+    url = 'https://store.steampowered.com/search/'
+    params = {'supportedlang': 'portuguese',
+            'category1': '998',
+            'specials': '1',
+            'ndl': '1',
+            'start': '0',
+            'excluded_content_types': '1'}
+
+    # Faz a requisição à página da Steam
+    page = requests.get(url, params=params)
     soup = BeautifulSoup(page.content, "html.parser")
 
     # Cria uma lista para armazenar os dados dos jogos
@@ -33,11 +41,13 @@ def get_data():
         url = game["href"]
 
         image_url = get_image(url)
+        
+        tag = get_tag(url)
 
-        games.append([name, original_price, discount_price, image_url, url])
+        games.append([name, original_price, discount_price, image_url, url, tag])
 
     # Cria um dataframe a partir da lista de jogos
-    df = pd.DataFrame(games, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original"])
+    df = pd.DataFrame(games, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original", "Primeiro marcador"])
 
     return df
     
@@ -46,7 +56,27 @@ def get_image(url):
     soup = BeautifulSoup(page.content, "html.parser")
     image_container = soup.find("img", {"class": "game_header_image_full"})
     
+    if image_container is None:
+        return None
+
     return image_container["src"]
     
+def get_tag(url):
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, "html.parser")    
+
+    tag_container = soup.find("div", {"class": "glance_tags popular_tags"})
+
+    if tag_container is not None:
+        tags = tag_container.find_all("a")
+        if len(tags) > 0:
+            first_tag = tags[0].get_text()
+        else:
+            first_tag = ""
+    else:
+        first_tag = ""
+
+    return first_tag.strip()
+
 if __name__ == '__main__':
     get_data()
