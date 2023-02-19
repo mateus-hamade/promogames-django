@@ -5,7 +5,7 @@ import pandas as pd
 def get_data():
     # Faz a requisição à página da Steam
     url = 'https://store.steampowered.com/search/'
-    params = {'supportedlang': 'portuguese',
+    params = {'supportedlang': 'pt-br',
             'category1': '998',
             'specials': '1',
             'ndl': '1',
@@ -44,10 +44,14 @@ def get_data():
         
         tag = get_tag(url)
 
-        games.append([name, original_price, discount_price, image_url, url, tag])
+        developer = get_developer(url)
+
+        release_date = get_date(url)
+
+        games.append([name, original_price, discount_price, image_url, url, tag, developer, release_date])
 
     # Cria um dataframe a partir da lista de jogos
-    df = pd.DataFrame(games, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original", "Primeiro marcador"])
+    df = pd.DataFrame(games, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original", "Primeiro marcador", "Desenvolvedora", "Data de lançamento"])
 
     return df
     
@@ -77,6 +81,33 @@ def get_tag(url):
         first_tag = ""
 
     return first_tag.strip()
+
+def get_developer(url):
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, "html.parser")    
+
+    developer_container = soup.find("div", {"class": "dev_row"})
+
+    if developer_container is not None:
+        developer = developer_container.find("a").get_text()
+    else:
+        developer = None
+
+    return developer
+
+def get_date(url):
+    page = requests.get(url)
+    soup = BeautifulSoup(page.content, "html.parser")    
+
+    date_container = soup.find("div", {"class": "date"})
+
+    if date_container is not None:
+        date = date_container.get_text()
+        date = date.split(",")[1].strip()
+    else:
+        date = None
+
+    return date
 
 if __name__ == '__main__':
     get_data()

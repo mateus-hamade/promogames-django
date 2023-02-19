@@ -19,6 +19,38 @@
     </div>
 {% elif cards %}
 <section class="py-10 bg-gray-100 font">
+    <div class="container flex justify-center">
+        <div class="flex items-center w-56 mt-5">
+            <select name="category" id="category" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none">
+                <option value="all">gênero</option>
+                {% for category in categories %}
+                    {% if category.tag %}
+                        <option value="{{category.tag}}">{{category.tag}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="flex items-center w-56 mt-5">
+            <select name="developer" id="developer" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none">
+                <option value="all">desenvolvedora</option>
+                {% for developer in developers %}
+                    {% if developer.developer %}
+                        <option value="{{developer.developer}}">{{developer.developer}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+        <div class="flex items-center w-56 mt-5">
+            <select name="release" id="release" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none">
+                <option value="all">data de lançamento</option>
+                {% for release in release_date %}
+                    {% if release.release_date %}
+                        <option value="{{release.release_date}}">{{release.release_date}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+    </div>
     <div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% for card in cards %}
             {% if card.image_url%}
@@ -51,6 +83,30 @@
             {% endif %}
         {% endfor %}
 </section>
+<script>
+    var baseUrl = 'http://127.0.0.1:8000/'
+    var category = $('#category');
+
+    $(category).change(function() {
+        var categoryValue = $(this).val();
+        window.location.href = baseUrl + '?category=' + categoryValue;
+    });
+
+    var developer = $('#developer');
+
+    $(developer).change(function() {
+        var developerValue = $(this).val();
+        window.location.href = baseUrl + '?developer=' + developerValue;
+    });
+
+    var release = $('#release');
+
+    $(release).change(function() {
+        var releaseValue = $(this).val();
+        window.location.href = baseUrl + '?release=' + releaseValue;
+    });
+
+</script>
 {% endif %}
 
 {% endblock %}

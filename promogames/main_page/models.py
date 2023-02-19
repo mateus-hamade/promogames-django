@@ -10,6 +10,8 @@ class Game(models.Model):
     discount_price = models.CharField(max_length=100)
 
     tag = models.CharField(max_length=100, null=True)
+    developer = models.CharField(max_length=100, null=True)
+    release_date = models.CharField(max_length=100, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
