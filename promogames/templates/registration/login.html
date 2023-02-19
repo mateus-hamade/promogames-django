@@ -12,7 +12,7 @@
                 <h1 class="mb-2 text-2xl">PromoGames</h1>
                 <span class="text-amber-400 tracking-wide">Entrar</span>
             </div>
-            <form method="POST" class="space-y-6">
+            <form method="POST" class="space-y-6 flex flex-col items-center">
                 {% csrf_token %}
                 {{ form|crispy}}
                 
