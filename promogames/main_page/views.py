@@ -27,7 +27,10 @@ def main(request):
     elif release:
         cards = cards.filter(release_date__icontains=release)
 
-    return render(request, 'main_page/main.html', {'cards': cards, 'categories': categories, 'developers': developers, 'release_date': release_date})
+    # return render(request, 'main_page/main.html', {'cards': cards, 'categories': categories, 'developers': developers.order_by, 'release_date': release_date.order_by('-release_date')})
+
+    # return render order by release date, category and developer
+    return render(request, 'main_page/main.html', {'cards': cards, 'categories': categories.order_by('tag'), 'developers': developers.order_by('developer'), 'release_date': release_date.order_by('-release_date')})
 
 def script(request):
     df = get_data()
