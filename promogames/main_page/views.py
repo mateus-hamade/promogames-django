@@ -2,11 +2,17 @@ from django.shortcuts import render
 from .models import Game
 from django.http import HttpResponse
 from django.core.paginator import Paginator
-import pandas as pd
 
 from .scriptSteam import get_data_Steam
 from .scriptNuuvem import get_data_Nuuvem
 from .scriptGog import get_data_GOG
+
+import pandas as pd
+
+from django.contrib.auth.decorators import user_passes_test
+
+def is_admin(user):
+    return user.is_authenticated and user.is_superuser
 
 def main(request):
     search = request.GET.get('search')
@@ -45,46 +51,47 @@ def main(request):
         'stores': stores.order_by('store')
     })
 
+@user_passes_test(is_admin)
 def script(request): 
-    if Game.objects.all().count() > 0:
-        Game.objects.all().delete() 
+    # if Game.objects.all().count() > 0:
+    #     Game.objects.all().delete() 
 
-    if True:
-        df1 = get_data_Steam()
+    # if True:
+    #     df1 = get_data_Steam()
 
-    for i in range(2):
-        if i == 0 and True: 
-            df2 = get_data_Nuuvem()
-        if i == 1 and True:
-            df2 = get_data_GOG()
-            pass
+    # for i in range(2):
+    #     if i == 0 and True: 
+    #         df2 = get_data_Nuuvem()
+    #     if i == 1 and True:
+    #         df2 = get_data_GOG()
+    #         pass
 
-        for index, row in df1.iterrows():
-            for index2, row2 in df2.iterrows():
-                if row['Nome do jogo'] == row2['Nome do jogo']:
-                    if row['Preço com promoção'] > row2['Preço com promoção']:
-                        df1.drop(index, inplace=True)
-                    else:
-                        df2.drop(index2, inplace=True)
+    #     for index, row in df1.iterrows():
+    #         for index2, row2 in df2.iterrows():
+    #             if row['Nome do jogo'] == row2['Nome do jogo']:
+    #                 if row['Preço com promoção'] > row2['Preço com promoção']:
+    #                     df1.drop(index, inplace=True)
+    #                 else:
+    #                     df2.drop(index2, inplace=True)
         
-        df1 = pd.concat([df1, df2], ignore_index=True)
+    #     df1 = pd.concat([df1, df2], ignore_index=True)
 
 
-    df1.sort_values(by=['Nome do jogo'], inplace=True)
+    # df1.sort_values(by=['Nome do jogo'], inplace=True)
 
 
-    if df1 is not None:
-        for index, row in df1.iterrows():
-            game = Game(
-                title = row['Nome do jogo'], 
-                price = row['Preço original'],
-                store = row['Loja'],
-                discount_price = row['Preço com promoção'],
-                image_url = row['URL da imagem'],
-                link_url =row['URL do site original'],
-                tag = row['Primeiro marcador'],
-                developer = row['Desenvolvedora'],
-                release_date = row['Data de lançamento'])
-            game.save()
+    # if df1 is not None:
+    #     for index, row in df1.iterrows():
+    #         game = Game(
+    #             title = row['Nome do jogo'], 
+    #             price = row['Preço original'],
+    #             store = row['Loja'],
+    #             discount_price = row['Preço com promoção'],
+    #             image_url = row['URL da imagem'],
+    #             link_url =row['URL do site original'],
+    #             tag = row['Primeiro marcador'],
+    #             developer = row['Desenvolvedora'],
+    #             release_date = row['Data de lançamento'])
+    #         game.save()
         
     return HttpResponse("Script executado com sucesso!")
