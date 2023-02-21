@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Game
 from django.http import HttpResponse
+from django.core.paginator import Paginator
 import pandas as pd
 
 from .scriptSteam import get_data_Steam
@@ -15,11 +16,17 @@ def main(request):
     release = request.GET.get('release')
     store = request.GET.get('store')
 
-    cards = Game.objects.all()
+    cards_list = Game.objects.all()
     categories = Game.objects.values('tag').distinct()
     developers = Game.objects.values('developer').distinct()
     release_date = Game.objects.values('release_date').distinct()
     stores = Game.objects.values('store').distinct()
+
+    # paginação 
+    paginator = Paginator(cards_list, 20)
+    page = request.GET.get('page')
+
+    cards = paginator.get_page(page)
 
     if search:
         cards = cards.filter(title__icontains=search)
