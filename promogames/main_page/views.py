@@ -22,7 +22,7 @@ def main(request):
     release_date = Game.objects.values('release_date').distinct()
     stores = Game.objects.values('store').distinct()
 
-    # paginação 
+    # paginação
     paginator = Paginator(cards_list, 20)
     page = request.GET.get('page')
 
