@@ -16,8 +16,8 @@ def get_data_GOG():
                 continue
 
             title_element = game['title']
-            original_price = game['price']['baseAmount']
-            discount_price = game['price']['finalAmount']
+            original_price = 'R$' + game['price']['baseAmount'].replace(".", ",")
+            discount_price = game['price']['finalAmount'].replace(".", ",")
             url = 'https://www.gog.com' + game['url']
             image_url = game['image'] + '.png' 
             tag = game['genres'][0]
