@@ -13,11 +13,13 @@ def main(request):
     category = request.GET.get('category')
     developer = request.GET.get('developer')
     release = request.GET.get('release')
+    store = request.GET.get('store')
 
     cards = Game.objects.all()
     categories = Game.objects.values('tag').distinct()
     developers = Game.objects.values('developer').distinct()
     release_date = Game.objects.values('release_date').distinct()
+    stores = Game.objects.values('store').distinct()
 
     if search:
         cards = cards.filter(title__icontains=search)
@@ -27,11 +29,10 @@ def main(request):
         cards = cards.filter(developer__icontains=developer)
     elif release:
         cards = cards.filter(release_date__icontains=release)
+    elif store:
+        cards = cards.filter(store__icontains=store)
 
-    # return render(request, 'main_page/main.html', {'cards': cards, 'categories': categories, 'developers': developers.order_by, 'release_date': release_date.order_by('-release_date')})
-
-    # return render order by release date, category and developer
-    return render(request, 'main_page/main.html', {'cards': cards, 'categories': categories.order_by('tag'), 'developers': developers.order_by('developer'), 'release_date': release_date.order_by('-release_date')})
+    return render(request, 'main_page/main.html', {'cards': cards, 'categories': categories.order_by('tag'), 'developers': developers.order_by('developer'), 'release_date': release_date.order_by('-release_date'), 'stores': stores.order_by('store')})
 
 def script(request): 
     if Game.objects.all().count() > 0:

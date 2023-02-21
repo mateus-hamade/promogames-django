@@ -50,6 +50,16 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="flex items-center w-56 mt-5">
+            <select name="store" id="store" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none">
+                <option value="all">Lojas</option>
+                {% for store in stores %}
+                    {% if store.store%}
+                        <option value="{{store.store}}">{{store.store}}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
     </div>
     <div class="mx-auto grid max-w-6xl grid-cols-1 gap-6 p-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {% for card in cards %}
@@ -104,6 +114,13 @@
     $(release).change(function() {
         var releaseValue = $(this).val();
         window.location.href = baseUrl + '?release=' + releaseValue;
+    });
+
+    var store = $('#store');
+
+    $(store).change(function() {
+        var storeValue = $(this).val();
+        window.location.href = baseUrl + '?store=' + storeValue;
     });
 
 </script>
