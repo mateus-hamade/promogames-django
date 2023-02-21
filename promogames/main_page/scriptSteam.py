@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-def get_data():
+def get_data_Steam():
     # Faz a requisição à página da Steam
     url = 'https://store.steampowered.com/search/'
     params = {'supportedlang': 'pt-br',
@@ -48,10 +48,10 @@ def get_data():
 
         release_date = get_date(url)
 
-        games.append([name, original_price, discount_price, image_url, url, tag, developer, release_date])
+        games.append([name, original_price, discount_price, image_url, url, tag, developer, release_date, "Steam"])
 
     # Cria um dataframe a partir da lista de jogos
-    df = pd.DataFrame(games, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original", "Primeiro marcador", "Desenvolvedora", "Data de lançamento"])
+    df = pd.DataFrame(games, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original", "Primeiro marcador", "Desenvolvedora", "Data de lançamento", "Loja"])
 
     return df
     
@@ -110,4 +110,4 @@ def get_date(url):
     return date
 
 if __name__ == '__main__':
-    get_data()
+    get_data_Steam()
