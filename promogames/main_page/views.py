@@ -8,7 +8,6 @@ from .scriptSteam import get_data_Steam
 from .scriptNuuvem import get_data_Nuuvem
 from .scriptGog import get_data_GOG
 
-# Create your views here.
 def main(request):
     search = request.GET.get('search')
     category = request.GET.get('category')
@@ -17,29 +16,34 @@ def main(request):
     store = request.GET.get('store')
 
     cards_list = Game.objects.all()
+
+    if search:
+        cards_list = cards_list.filter(title__icontains=search)
+    elif category:
+        cards_list = cards_list.filter(tag__icontains=category)
+    elif developer:
+        cards_list = cards_list.filter(developer__icontains=developer)
+    elif release:
+        cards_list = cards_list.filter(release_date__icontains=release)
+    elif store:
+        cards_list = cards_list.filter(store__icontains=store)
+
+    paginator = Paginator(cards_list, 20)
+    page = request.GET.get('page')
+    cards = paginator.get_page(page)
+
     categories = Game.objects.values('tag').distinct()
     developers = Game.objects.values('developer').distinct()
     release_date = Game.objects.values('release_date').distinct()
     stores = Game.objects.values('store').distinct()
 
-    # paginação
-    paginator = Paginator(cards_list, 20)
-    page = request.GET.get('page')
-
-    cards = paginator.get_page(page)
-
-    if search:
-        cards = cards.filter(title__icontains=search)
-    elif category:
-        cards = cards.filter(tag__icontains=category)
-    elif developer:
-        cards = cards.filter(developer__icontains=developer)
-    elif release:
-        cards = cards.filter(release_date__icontains=release)
-    elif store:
-        cards = cards.filter(store__icontains=store)
-
-    return render(request, 'main_page/main.html', {'cards': cards, 'categories': categories.order_by('tag'), 'developers': developers.order_by('developer'), 'release_date': release_date.order_by('-release_date'), 'stores': stores.order_by('store')})
+    return render(request, 'main_page/main.html', {
+        'cards': cards,
+        'categories': categories.order_by('tag'),
+        'developers': developers.order_by('developer'),
+        'release_date': release_date.order_by('-release_date'),
+        'stores': stores.order_by('store')
+    })
 
 def script(request): 
     if Game.objects.all().count() > 0:
