@@ -1,38 +1,38 @@
-# import requests
-# from bs4 import BeautifulSoup
-# import pandas as pd
+import requests
+import pandas as pd
+from datetime import datetime
 
 def get_data_GOG():
-    games = []
-    page = requests.get('https://www.gog.com/en/games/discounted')
-    soup = BeautifulSoup(page.content, "html.parser")
+    response = requests.get('https://embed.gog.com/games/ajax/filtered?mediaType=game&price=discounted&sort=popularity&page=1')
+    games = response.json()['products']
 
-    container = soup.find('div', class_='paginated-products-grid grid')
-    games = container.find_all('product-tile', class_='ng-star-inserted')
+    jogos = []
 
     for game in games:
-        title_element = game.find('div', class_='product-tile__title').get_text().strip()
-        price_element = game.find('span', class_='final-value')
-        game.find()
-        print( title_element, price_element)
-        exit(1)
+        if game['price']['baseAmount'] == game['price']['finalAmount']:
+            continue
 
-        discount_element = game.find('span', class_='product-price--discount')
+        title_element = game['title']
+        original_price = game['price']['baseAmount']
+        discount_price = game['price']['finalAmount']
+        url = 'https://www.gog.com' + game['url']
+        image_url = game['image'] + '.png' 
+        tag = game['genres'][0]
+        developer = game['developer'].split(",")[0]
+
+        if game['releaseDate'] == None:
+            release_date = "Desconhecido"
+        else:          
+            release_date = datetime.fromtimestamp(game['releaseDate']).strftime('%Y')
+
+        jogos.append([title_element, original_price, discount_price, image_url, url, tag, developer, release_date, "GOG"])
 
 
-
-        tag = get_tag(url)
-
-        developer = get_developer(url)        
-
-        release_date = get_date(url)
-
-        games.append([name, original_price, discount_price, image_url, url, tag, developer, release_date, "Nuuvem"])
-
-    df = pd.DataFrame(games, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original", "Primeiro marcador", "Desenvolvedora", "Data de lançamento", "Loja"])
+    df = pd.DataFrame(jogos, columns=["Nome do jogo", "Preço original", "Preço com promoção", "URL da imagem", "URL do site original", "Primeiro marcador", "Desenvolvedora", "Data de lançamento", "Loja"])
+    
 
     return df
 
 
-
-get_data_GOG()
+if __name__ == "__main__":
+    get_data_GOG()

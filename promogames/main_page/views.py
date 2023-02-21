@@ -40,8 +40,8 @@ def script(request):
     if True:
         df1 = get_data_Steam()
 
-    for i in range(1): ############################# 2
-        if i == 0 and True:
+    for i in range(2):
+        if i == 0 and True: 
             df2 = get_data_Nuuvem()
         if i == 1 and True:
             df2 = get_data_GOG()
