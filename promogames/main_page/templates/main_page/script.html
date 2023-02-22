@@ -1,16 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="mb-10 font h-screen">
-    <div class="pt-32  bg-white">
+    <div class="pt-32  bg-white mb-10">
         <h1 class="text-center text-2xl font-bold text-amber-400 font">Escolhas a(s) loja(s) que deseja Adicionar</h1>
     </div>
     
-    <div class="flex flex-col items-center text-gray-700">
-        <form method="get" id="checkbox-form">    
-            <label for="">steam</label><input type="checkbox" name="steam" id="steam">
-            <label for="">nuuvem</label><input type="checkbox" name="nuuvem" id="nuuvem">
-            <label for="">gog</label><input type="checkbox" name="gog" id="gog">
-            <button id="checkbox-btn">Adicionar</button>
+    <div class="flex flex-col items-center text-gray-700 ">
+        <form method="get" id="checkbox-form" class="space-y-2 p-5 bg-slate-200 rounded-lg">    
+            <div class="flex flex-col items-start">
+                <div>
+                    <input type="checkbox" name="steam" id="steam">
+                    <label for="">steam</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="nuuvem" id="nuuvem">
+                    <label for="">nuuvem</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="gog" id="gog">
+                    <label for="">gog</label>
+                </div>
+            </div>
+            <button id="checkbox-btn" class="px-2 py-1 bg-gray-700 text-white rounded-lg hover:bg-lime-600 focus:outline-none duration-300">Adicionar</button>
         </form>
     </div>
 </div>

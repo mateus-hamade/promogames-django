@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Game
-from django.http import HttpResponse
+from django.shortcuts import redirect
+
 from django.core.paginator import Paginator
 
 from .scriptSteam import get_data_Steam
@@ -21,7 +22,7 @@ def main(request):
     release = request.GET.get('release')
     store = request.GET.get('store')
 
-    cards_list = Game.objects.all()
+    cards_list = Game.objects.all().order_by('-title')
 
     if search:
         cards_list = cards_list.filter(title__icontains=search)
@@ -59,7 +60,7 @@ def script(request):
 
     if steam or nuuvem or gog:
         stores_script(steam, nuuvem, gog)
-        return render(request, 'main_page/main.html')
+        return redirect('http://127.0.0.1:8000')
         
     return render(request, 'main_page/script.html')
 
