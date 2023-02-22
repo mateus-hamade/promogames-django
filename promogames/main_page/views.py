@@ -67,7 +67,10 @@ def stores_script(steam, nuuvem, gog):
     if Game.objects.all().count() > 0:
         Game.objects.all().delete() 
 
-    if True:
+    df1 = pd.DataFrame()
+    df2 = pd.DataFrame()
+
+    if steam == 'on':
         df1 = get_data_Steam()
 
     for i in range(2):
@@ -75,17 +78,18 @@ def stores_script(steam, nuuvem, gog):
             df2 = get_data_Nuuvem()
         if i == 1 and gog == 'on':
             df2 = get_data_GOG()
-            pass
 
-        for index, row in df1.iterrows():
-            for index2, row2 in df2.iterrows():
-                if row['Nome do jogo'] == row2['Nome do jogo']:
-                    if row['Preço com promoção'] > row2['Preço com promoção']:
-                        df1.drop(index, inplace=True)
-                    else:
-                        df2.drop(index2, inplace=True)
+        if not df1.empty and not df2.empty:
+            for index, row in df1.iterrows():
+                for index2, row2 in df2.iterrows():
+                    if row['Nome do jogo'] == row2['Nome do jogo']:
+                        if row['Preço com promoção'] > row2['Preço com promoção']:
+                            df1.drop(index, inplace=True)
+                        else:
+                            df2.drop(index2, inplace=True)
         
         df1 = pd.concat([df1, df2], ignore_index=True)
+        df2 = pd.DataFrame()
 
 
     df1.sort_values(by=['Nome do jogo'], inplace=True)
@@ -104,3 +108,4 @@ def stores_script(steam, nuuvem, gog):
                 developer = row['Desenvolvedora'],
                 release_date = row['Data de lançamento'])
             game.save()
+
