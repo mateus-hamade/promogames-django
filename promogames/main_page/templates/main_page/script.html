@@ -6,46 +6,12 @@
     </div>
     
     <div class="flex flex-col items-center text-gray-700">
-        <form method="GET" id="checkbox-form" class="space-y-2">
-            <div class="flex flex-col items-start">
-                <div class="space-x-2">
-                    <label for="Steam">Steam</label>
-                    <input type="checkbox" name="steam" id="steam">
-                </div>
-                <div class="space-x-2">
-                    <label for="Nuuvem">Nuuvem</label>
-                    <input type="checkbox" name="nuuvem" id="nuuvem">
-                </div>
-                <div class="space-x-2">
-                    <label for="Gog">Gog</label>
-                    <input type="checkbox" name="gog" id="gog">
-                </div>
-            </div>
-            <button type="button" class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-lime-600 focus:outline-none duration-300" id="checkbox-btn">Adicionar</button>
+        <form method="get" id="checkbox-form">    
+            <label for="">steam</label><input type="checkbox" name="steam" id="steam">
+            <label for="">nuuvem</label><input type="checkbox" name="nuuvem" id="nuuvem">
+            <label for="">gog</label><input type="checkbox" name="gog" id="gog">
+            <button id="checkbox-btn">Adicionar</button>
         </form>
     </div>
 </div>
-
-<script>
-    $(document).ready(function() {
-        var checkboxBtn = $('#search-btn');
-
-        checkboxBtn.click(function() {
-            var steam = $('#steam').val();
-            var nuuvem = $('#nuuvem').val();
-            var gog = $('#gog').val();
-
-            $.ajax({
-                url: '/main_page/script/',
-                type: 'GET',
-                data: {
-                    'steam': steam,
-                    'nuuvem': nuuvem,
-                    'gog': gog,
-                },
-            });
-        });
-    });
-</script>
-
 {% endblock %}
