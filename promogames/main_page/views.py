@@ -53,45 +53,54 @@ def main(request):
 
 @user_passes_test(is_admin)
 def script(request): 
-    # if Game.objects.all().count() > 0:
-    #     Game.objects.all().delete() 
+    steam = request.GET.get('steam')
+    nuuvem = request.GET.get('nuuvem')
+    gog = request.GET.get('gog')
 
-    # if True:
-    #     df1 = get_data_Steam()
-
-    # for i in range(2):
-    #     if i == 0 and True: 
-    #         df2 = get_data_Nuuvem()
-    #     if i == 1 and True:
-    #         df2 = get_data_GOG()
-    #         pass
-
-    #     for index, row in df1.iterrows():
-    #         for index2, row2 in df2.iterrows():
-    #             if row['Nome do jogo'] == row2['Nome do jogo']:
-    #                 if row['Preço com promoção'] > row2['Preço com promoção']:
-    #                     df1.drop(index, inplace=True)
-    #                 else:
-    #                     df2.drop(index2, inplace=True)
+    if steam or nuuvem or gog:
+        stores_script(steam, nuuvem, gog)
+        return render(request, 'main_page/main.html')
         
-    #     df1 = pd.concat([df1, df2], ignore_index=True)
+    return render(request, 'main_page/script.html')
 
+def stores_script(steam, nuuvem, gog):
+    if Game.objects.all().count() > 0:
+        Game.objects.all().delete() 
 
-    # df1.sort_values(by=['Nome do jogo'], inplace=True)
+    if True:
+        df1 = get_data_Steam()
 
+    for i in range(2):
+        if i == 0 and nuuvem == 'on': 
+            df2 = get_data_Nuuvem()
+        if i == 1 and gog == 'on':
+            df2 = get_data_GOG()
+            pass
 
-    # if df1 is not None:
-    #     for index, row in df1.iterrows():
-    #         game = Game(
-    #             title = row['Nome do jogo'], 
-    #             price = row['Preço original'],
-    #             store = row['Loja'],
-    #             discount_price = row['Preço com promoção'],
-    #             image_url = row['URL da imagem'],
-    #             link_url =row['URL do site original'],
-    #             tag = row['Primeiro marcador'],
-    #             developer = row['Desenvolvedora'],
-    #             release_date = row['Data de lançamento'])
-    #         game.save()
+        for index, row in df1.iterrows():
+            for index2, row2 in df2.iterrows():
+                if row['Nome do jogo'] == row2['Nome do jogo']:
+                    if row['Preço com promoção'] > row2['Preço com promoção']:
+                        df1.drop(index, inplace=True)
+                    else:
+                        df2.drop(index2, inplace=True)
         
-    return HttpResponse("Script executado com sucesso!")
+        df1 = pd.concat([df1, df2], ignore_index=True)
+
+
+    df1.sort_values(by=['Nome do jogo'], inplace=True)
+
+
+    if df1 is not None:
+        for index, row in df1.iterrows():
+            game = Game(
+                title = row['Nome do jogo'], 
+                price = row['Preço original'],
+                store = row['Loja'],
+                discount_price = row['Preço com promoção'],
+                image_url = row['URL da imagem'],
+                link_url =row['URL do site original'],
+                tag = row['Primeiro marcador'],
+                developer = row['Desenvolvedora'],
+                release_date = row['Data de lançamento'])
+            game.save()
