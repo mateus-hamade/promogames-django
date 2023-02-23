@@ -1,12 +1,13 @@
 from django.shortcuts import render
-from .models import Game
 from django.shortcuts import redirect
+
+from .models import Game
 
 from django.core.paginator import Paginator
 
-from .scriptSteam import get_data_Steam
-from .scriptNuuvem import get_data_Nuuvem
-from .scriptGog import get_data_GOG
+from .script.scriptSteam import get_data_Steam
+from .script.scriptNuuvem import get_data_Nuuvem
+from .script.scriptGog import get_data_GOG
 
 import pandas as pd
 
@@ -109,4 +110,3 @@ def stores_script(steam, nuuvem, gog):
                 developer = row['Desenvolvedora'],
                 release_date = row['Data de lançamento'])
             game.save()
-
