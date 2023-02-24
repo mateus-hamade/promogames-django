@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
+from django.contrib import messages
 
-from .models import Game
+from .models import Game, UserProfile
 
 from django.core.paginator import Paginator
 
@@ -9,9 +10,12 @@ from .script.scriptSteam import get_data_Steam
 from .script.scriptNuuvem import get_data_Nuuvem
 from .script.scriptGog import get_data_GOG
 
+from .forms import UserProfileForm
+
 import pandas as pd
 
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import login_required
 
 def is_admin(user):
     return user.is_authenticated and user.is_superuser
@@ -110,3 +114,18 @@ def stores_script(steam, nuuvem, gog):
                 developer = row['Desenvolvedora'],
                 release_date = row['Data de lançamento'])
             game.save()
+
+@login_required
+def profile(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Email enviado com sucesso!')
+    else:
+        form = UserProfileForm(instance=user_profile)
+
+
+    return render(request, 'profile.html', {'form': form})

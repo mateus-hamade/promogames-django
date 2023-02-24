@@ -26,9 +26,9 @@
             </div>
 
             {% if user.is_authenticated %}
-            <div class="mt-2 sm:mt-0 sm:flex md:order-2 items-center space-x-2">
-                <p class="font text-gray-700">{{user.username}}</p>
-                <a href="/accounts/logout" class="mr-3 hidden border border-gray-700 py-1.5 px-6 text-center text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-300 hover:border-amber-400 hover:text-amber-400 md:inline-block rounded-lg hover:transform hover:scale-105 duration-300 font">Sair</a>
+            <div class="mt-2 sm:mt-0 sm:flex md:order-2 items-center space-x-4">
+                <p class="font text-gray-700"><a href="profile">{{user.username}}</a></p>
+                <a href="/accounts/logout"><img src="https://cdn-icons-png.flaticon.com/512/126/126467.png" class="w-5"></a>
             </div>
 
             {% else %}
