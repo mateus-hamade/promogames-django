@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from .script.scriptSteam import get_data_Steam
 from .script.scriptNuuvem import get_data_Nuuvem
 from .script.scriptGog import get_data_GOG
+from .script.scriptGmail import send_email
 
 from .forms import UserProfileForm
 
@@ -100,7 +101,6 @@ def stores_script(steam, nuuvem, gog):
 
     df1.sort_values(by=['Nome do jogo'], inplace=True)
 
-
     if df1 is not None:
         for index, row in df1.iterrows():
             game = Game(
@@ -114,6 +114,12 @@ def stores_script(steam, nuuvem, gog):
                 developer = row['Desenvolvedora'],
                 release_date = row['Data de lançamento'])
             game.save()
+
+    teste = Game.objects.values('image_url').first().get('image_url')
+
+    for user in UserProfile.objects.all():
+        if user.receive_promotions:
+            send_email(user.receive_promotions, user.user.username, teste)
 
 @login_required
 def profile(request):
