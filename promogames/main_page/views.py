@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.db.models import Prefetch
 
-from .models import Game, UserProfile
+from .models import Game, UserProfile, Comment
 
 from django.core.paginator import Paginator
 
@@ -11,7 +12,7 @@ from .script.scriptNuuvem import get_data_Nuuvem
 from .script.scriptGog import get_data_GOG
 from .script.scriptGmail import send_email
 
-from .forms import UserProfileForm
+from .forms import UserProfileForm, CommentForm
 
 import pandas as pd
 
@@ -135,3 +136,32 @@ def profile(request):
 
 
     return render(request, 'profile.html', {'form': form})
+
+@login_required
+def game_detail(request, title):
+    comment_user_dict = {}
+
+    comments = Comment.objects.all()
+    users = [c.user for c in comments]
+
+    for comment in comments:
+        comment_user_dict[comment] = comment.user
+
+    card = Game.objects.get(title=title)
+    form = CommentForm()
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.user = request.user
+            comment.game = card
+            comment.save()
+            return redirect('game_detail', title=card.title) 
+
+    return render(request, 'game_detail.html', {
+        'card': card,
+        'form': form,
+        'comments': comment_user_dict,
+        'users': users
+    })

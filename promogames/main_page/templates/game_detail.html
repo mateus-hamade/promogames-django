@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load tailwind_filters %}
+
+<section class="py-10 pt-32 bg-gray-100 font">
+    <div class="mx-auto grid max-w-6xl grid-cols-4 grid-rows-2 gap-6 p-6">
+        <article class="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300">
+            <a href="{% url 'game_detail' card.title%}">
+                <div class="relative flex items-end overflow-hidden rounded-xl object-fill h-auto">
+                    <img src={{card.image_url}}>
+                </div>
+        
+                <div class="mt-1 p-3">
+                    <h2 class="text-slate-700 truncate">{{card.title}}</h2>
+                    <p class="mt-1 text-sm text-slate-400">{{card.store}}</p>
+                    <p class="mt-1 text-sm text-slate-400">{{card.tag}}</p>
+        
+                    <div class="mt-3 flex items-center justify-between">
+                        <div class="flex justify-between flex-col">
+                            <span class="text-sm text-amber-400 line-through">{{card.price}}</span>
+                            <span class="text-lg font-bold text-lime-600">R$ {{card.discount_price}}</span>
+                        </div>
+            
+                        <div class="flex items-center space-x-1.5 rounded-lg bg-gray-700 px-4 py-1.5 text-white duration-100 hover:bg-lime-600">
+                            <a href="{{card.link_url}}" target="_blank">
+                                <button class="text-sm">Comprar</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </article>
+        <article class="rounded-xl bg-white p-3 shadow-lg col-span-3 row-span-2 text-slate-700">
+            <div class="flex flex-col h-full">
+                <div class="text-lime-600 justify-center flex p-5">
+                    <h1 class="text-2xl">Análise de clientes</h1>
+                </div>
+                <div class="bg-slate-100 rounded-md h-full p-5">
+                    {% for comment, user in comments.items %}
+                        <div class="border-b border-gray-200 py-2.5 flex justify-between">
+                            <div>
+                                <h1>{{user}}</h1>
+                                <p class="text-sm">{{comment}}</p>
+                            </div>
+                            <div>
+                                <p class="text-lime-600">Avaliação ótima</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </article>
+        <article class="rounded-xl bg-white p-3 shadow-lg row-start-2 text-slate-700">
+            <h1 class="text-xl">Faça sua análise</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <input type="submit" name="" id="" value="publicar" class="flex items-center space-x-1.5 rounded-lg bg-gray-700 px-4 py-1.5 text-white duration-100 hover:bg-lime-600">
+            </form>
+        </article>
+    </div>
+</section>
+
+{% endblock %}

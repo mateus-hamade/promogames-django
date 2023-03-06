@@ -65,7 +65,7 @@
         {% for card in cards %}
             {% if card.image_url%}
                 <article class="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
-                    <a href="#">
+                    <a href="{% url 'game_detail' card.title%}">
                         <div class="relative flex items-end overflow-hidden rounded-xl object-fill h-auto">
                             <img src={{card.image_url}}>
                         </div>
