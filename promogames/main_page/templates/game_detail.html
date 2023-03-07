@@ -39,15 +39,14 @@
                 </div>
                 <div class="bg-slate-100 rounded-md h-full p-5">
                     {% for comment, user in comments.items %}
-                        <div class="border-b border-gray-200 py-2.5 flex justify-between">
-                            <div>
-                                <h1>{{user}}</h1>
-                                <p class="text-sm">{{comment}}</p>
+                        {% if card %}
+                            <div class="border-b border-gray-200 py-2.5 flex justify-between">
+                                <div>
+                                    <h1 class="text-amber-400">{{user}}</h1>
+                                    <p class="text-sm">{{comment}}</p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-lime-600">Avaliação ótima</p>
-                            </div>
-                        </div>
+                        {% endif %}
                     {% endfor %}
                 </div>
             </div>

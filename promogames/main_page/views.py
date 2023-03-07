@@ -141,7 +141,7 @@ def profile(request):
 def game_detail(request, title):
     comment_user_dict = {}
 
-    comments = Comment.objects.all()
+    comments = Comment.objects.filter(game__title=title).order_by('-created_at')
     users = [c.user for c in comments]
 
     for comment in comments:
