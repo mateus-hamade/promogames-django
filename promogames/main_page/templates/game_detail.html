@@ -32,26 +32,32 @@
                 </div>
             </a>
         </article>
-        <article class="rounded-xl bg-white p-3 shadow-lg col-span-3 row-span-2 text-slate-700">
+        <article class="rounded-xl bg-white p-3 shadow-lg col-span-3 row-span-2 text-slate-700 overflow-y-auto" style="max-height: 608px;">
             <div class="flex flex-col h-full">
                 <div class="text-lime-600 justify-center flex p-5">
                     <h1 class="text-2xl">Análise de clientes</h1>
                 </div>
-                <div class="bg-slate-100 rounded-md h-full p-5">
-                    {% for comment, user in comments.items %}
-                        {% if card %}
-                            <div class="border-b border-gray-200 py-2.5 flex justify-between">
+                <div class="space-y-1 pb-2">
+                    {% if comments.items %}
+                        {% for comment, user in comments.items %}
+                            <div class="border-b border-gray-200 py-2.5 flex justify-between bg-slate-100 rounded-md p-5">
                                 <div>
                                     <h1 class="text-amber-400">{{user}}</h1>
                                     <p class="text-sm">{{comment}}</p>
                                 </div>
                             </div>
-                        {% endif %}
-                    {% endfor %}
+                        {% endfor %}
+                    {% else %}
+                        <div class="py-2.5 flex justify-center">
+                            <div>
+                                <h1 class="text-amber-400 text-lg">Faça a primeira avaliação!</h1>
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </article>
-        <article class="rounded-xl bg-white p-3 shadow-lg row-start-2 text-slate-700">
+        <article class="rounded-xl bg-slate-100 p-3 shadow-lg row-start-2 text-slate-700">
             <h1 class="text-xl">Faça sua análise</h1>
             <form method="post">
                 {% csrf_token %}
