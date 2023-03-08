@@ -5,7 +5,7 @@
 {% load tailwind_filters %}
 
 <section class="py-10 pt-32 bg-gray-100 font">
-    <div class="mx-auto grid max-w-6xl grid-cols-4 grid-rows-2 gap-6 p-6">
+    <div class="mx-auto grid max-w-6xl grid-cols-4 grid-rows-5 gap-6 p-6">
         <article class="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300">
             <a href="{% url 'game_detail' card.title%}">
                 <div class="relative flex items-end overflow-hidden rounded-xl object-fill h-auto">
@@ -32,7 +32,7 @@
                 </div>
             </a>
         </article>
-        <article class="rounded-xl bg-white p-3 shadow-lg col-span-3 row-span-2 text-slate-700 overflow-y-auto" style="max-height: 608px;">
+        <article class="rounded-xl bg-white p-3 shadow-lg col-span-3 row-span-2 text-slate-700 overflow-y-auto" style="max-height: 674px;">
             <div class="flex flex-col h-full">
                 <div class="text-lime-600 justify-center flex p-5">
                     <h1 class="text-2xl">Análise de clientes</h1>
@@ -65,7 +65,70 @@
                 <input type="submit" name="" id="" value="publicar" class="flex items-center space-x-1.5 rounded-lg bg-gray-700 px-4 py-1.5 text-white duration-100 hover:bg-lime-600">
             </form>
         </article>
+        <article class="rounded-xl bg-white p-3 shadow-lg row-start-3 col-span-4 row-span-2 text-slate-700 grid grid-cols-3 grid-rows-6">
+            <div class="text-lime-600 justify-center flex p-5 col-start-2">
+                <h1 class="text-2xl">Histórico de preços</h1>
+            </div>
+            <div class="border-b border-gray-200 py-2.5 flex justify-between bg-slate-100 rounded-md p-5 row-start-2 row-span-5 col-span-3">
+                <canvas id="myChart"></canvas>
+            </div>
+        </article>
     </div>
 </section>
+
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+
+    // Definindo os dados do gráfico
+    var data = {
+        labels: ["01/03", "02/03", "03/03", "04/03", "05/03", "06/03", "07/03", "08/03", "09/03", "10/03", "11/03", "12/03", "13/03", "14/03", "15/03", "16/03", "17/03", "18/03", "19/03", "20/03", "21/03", "22/03", "23/03", "24/03", "25/03", "26/03", "27/03", "28/03", "29/03", "30/03"],
+        datasets: [{
+            label: "Preço",
+            data: [50, 48, 52, 55, 53, 58, 60, 63, 68, 65, 70, 72, 75, 73, 78, 80, 82, 80, 85, 87, 88, 90, 88, 92, 95, 100, 98, 95, 93, 95],
+            borderColor: 'rgb(255, 202, 40)',
+            fill: false,
+        }]
+    };
+
+    // Configurando as opções do gráfico
+    var options = {
+        responsive: true,
+        title: {
+            display: true,
+            text: 'Evolução de Preços de um Jogo em 30 Dias'
+        },
+        tooltips: {
+            mode: 'index',
+            intersect: false,
+        },
+        hover: {
+            mode: 'nearest',
+            intersect: true
+        },
+        scales: {
+            xAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Data'
+                }
+            }],
+            yAxes: [{
+                display: true,
+                scaleLabel: {
+                    display: true,
+                    labelString: 'Preço'
+                }
+            }]
+        }
+    };
+
+    // Criando o gráfico de linha
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: options
+    });
+</script>
 
 {% endblock %}
