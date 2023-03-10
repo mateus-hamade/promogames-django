@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
-from django.db.models import Prefetch
 
 from .models import Game, UserProfile, Comment
 
@@ -165,3 +164,9 @@ def game_detail(request, title):
         'comments': comment_user_dict,
         'users': users
     })
+
+@login_required
+def suporte(request):
+    user = request.user
+
+    return render(request, 'support.html', {'user': user})

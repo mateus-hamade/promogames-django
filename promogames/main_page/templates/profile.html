@@ -4,31 +4,58 @@
 
 {% load tailwind_filters %}
 
-<div class="flex flex-col h-screen items-center justify-center bg-gray-200 bg-cover">
-    <div class="rounded-xl bg-slate-400 bg-opacity-50 px-16 py-7 shadow-lg backdrop-blur-md max-sm:px-8">
-        <div class="text-amber-400 mt-30">
-            <div class="mb-8 flex flex-col items-center font">
-                <img src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" class="w-11 pb-4">
-                <h1 class="mb-2 text-2xl">Perfil de usuário</h1>
-                <span class="text-slate-700 tracking-wide">Bem-vindo {{ request.user.username }}</span>
-            </div>
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form | crispy }}
-    
-                <div class="flex justify-center font">
-                    <button type="submit" class="btn btn-primary px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-lime-600 focus:outline-none duration-300 mt-10">Enviar</button>
+<section class="py-10 pt-32 bg-gray-100 font">
+    <div class="mx-auto grid max-w-6xl grid-cols-3 gap-6 p-6">
+        <article class="rounded-xl bg-slate-300 p-8 shadow-lg row-start-2 text-slate-700">
+            <div class="text-amber-400 mt-30">
+                <div class="mb-8 flex flex-col items-center font">
+                    <img src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" class="w-11 pb-4">
+                    <h1 class="mb-2 text-2xl">Perfil de usuário</h1>
+                    <span class="text-slate-700 tracking-wide">Bem-vindo {{ request.user.username }}</span>
                 </div>
-            </form>
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} text-slate-700 flex justify-center mt-3 bg-green-500 rounded-lg">
-                        {{ message }}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+        
+                    <div class="flex justify-center font">
+                        <button type="submit" class="btn btn-primary px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-lime-600 focus:outline-none duration-300 mt-10">Enviar</button>
                     </div>
-                {% endfor %}
-            {% endif %}
-        </div>
+                </form>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} text-slate-700 flex justify-center mt-3 bg-green-500 rounded-lg">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </article>
+        <article class="grid grid-cols-3 grid-rows-5 rounded-xl bg-slate-300 p-8 shadow-lg row-start-2 text-slate-700 col-span-2 space-y-2">
+            <div class="col-span-3">
+                <h1 class="text-2xl text-lime-600">Lista de desejo de {{ request.user.username }}</h1>
+                <p class="text-sm">Avisaremos quando seus jogos favoritos estiverem em promoção</p>
+            </div>
+            <div>
+                <select name="release" id="release" class="w-full px-4 py-2 border rounded-lg text-gray-700 focus:outline-none">
+                    <option value="all">Lista de desejo</option>
+                    <option value="">Xeno Crisis</option>
+                    <option value="">Red Dead Redemption 2</option>
+                    <option value="">The Last of Us 2</option>
+                    <option value="">Cyberpunk 2077</option>
+                    <option value="">God of War</option>
+                    <option value="">The Last of Us</option>
+                    <option value="">The Witcher 3</option>
+                </select>
+            </div>
+            <div class="col-span-3">
+                <h1 class="text-2xl text-lime-600">Atualizar senha</h1>
+                <p class="text-sm">Gostaria de atualizar sua senha?</p>
+            </div>
+            <div>
+                <a href="{% url 'password_reset' %}" class="btn btn-primary px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-lime-600 focus:outline-none duration-300 mt-10">Recuperar senha</a>
+            </div>
+        </article>
     </div>
-</div>
+</section>
 
 {% endblock %}

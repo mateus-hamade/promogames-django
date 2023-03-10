@@ -65,30 +65,34 @@
         {% for card in cards %}
             {% if card.image_url%}
                 <article class="rounded-xl bg-white p-3 shadow-lg hover:shadow-xl hover:transform hover:scale-105 duration-300 ">
-                    <a href="{% url 'game_detail' card.title%}">
-                        <div class="relative flex items-end overflow-hidden rounded-xl object-fill h-auto">
-                            <img src={{card.image_url}}>
-                        </div>
-                
-                        <div class="mt-1 p-3">
+                    <div class="relative flex items-end overflow-hidden rounded-xl object-fill h-auto">
+                        <a href="{% url 'game_detail' card.title%}"><img src={{card.image_url}}></a>
+                    </div>
+            
+                    <div class="mt-1 p-3">
+                        <div class="flex justify-between">
                             <h2 class="text-slate-700 truncate">{{card.title}}</h2>
-                            <p class="mt-1 text-sm text-slate-400">{{card.store}}</p>
-                            <p class="mt-1 text-sm text-slate-400">{{card.tag}}</p>
+                            <button class="text-slate-500 hover:text-slate-700" onclick="likeCard('{{card.id}}', this)">
+                                <i class="fas fa-heart text-slate-500"></i>
+                            </button>
+                        </div>
+
+                        <p class="mt-1 text-sm text-slate-400">{{card.store}}</p>
+                        <p class="mt-1 text-sm text-slate-400">{{card.tag}}</p>
+            
+                        <div class="mt-3 flex items-center justify-between">
+                            <div class="flex justify-between flex-col">
+                                <span class="text-sm text-amber-400 line-through">{{card.price}}</span>
+                                <span class="text-lg font-bold text-lime-600">R$ {{card.discount_price}}</span>                 
+                            </div>
                 
-                            <div class="mt-3 flex items-center justify-between">
-                                <div class="flex justify-between flex-col">
-                                    <span class="text-sm text-amber-400 line-through">{{card.price}}</span>
-                                    <span class="text-lg font-bold text-lime-600">R$ {{card.discount_price}}</span>
-                                </div>
-                    
-                                <div class="flex items-center space-x-1.5 rounded-lg bg-gray-700 px-4 py-1.5 text-white duration-100 hover:bg-lime-600">
-                                    <a href="{{card.link_url}}" target="_blank">
-                                        <button class="text-sm">Comprar</button>
-                                    </a>
-                                </div>
+                            <div class="flex items-center space-x-1.5 rounded-lg bg-gray-700 px-4 py-1.5 text-white duration-100 hover:bg-lime-600">
+                                <a href="{{card.link_url}}" target="_blank">
+                                    <button class="text-sm">Comprar</button>
+                                </a>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </article>
             {% endif %}
         {% endfor %}
@@ -124,6 +128,13 @@
         var storeValue = $(this).val();
         window.location.href = baseUrl + '?store=' + storeValue;
     });
+
+    function likeCard(cardId, button) {
+    // Adiciona a classe 'text-red-700' ao ícone do coração
+    button.querySelector('i').classList.remove('text-slate-500');
+    button.querySelector('i').classList.add('text-red-500');
+}
+
 
 </script>
 {% endif %}
