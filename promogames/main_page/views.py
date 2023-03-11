@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib import messages
 
-from .models import Game, UserProfile, Comment
+from .models import Game, UserProfile, Comment, Historical
 
 from django.core.paginator import Paginator
 
@@ -101,8 +101,11 @@ def stores_script(steam, nuuvem, gog):
 
     df1.sort_values(by=['Nome do jogo'], inplace=True)
 
+
     if df1 is not None:
         for index, row in df1.iterrows():
+            # if row['Nome do jogo'] == 'Zombasite': // Teste
+            #     row['Preço com promoção'] = '9'
             game = Game(
                 title = row['Nome do jogo'], 
                 price = row['Preço original'],
@@ -114,6 +117,18 @@ def stores_script(steam, nuuvem, gog):
                 developer = row['Desenvolvedora'],
                 release_date = row['Data de lançamento'])
             game.save()
+
+            historic = Historical(
+                title = row['Nome do jogo'],
+                lowest_price = row['Preço com promoção'])
+            
+            old_historic = Historical.objects.filter(title=row['Nome do jogo'])
+
+            if old_historic and list(old_historic.values('lowest_price')).pop().get('lowest_price') > historic.lowest_price:
+                Historical.objects.filter(title=row['Nome do jogo']).update(lowest_price=historic.lowest_price)
+            if not old_historic:
+                historic.save()
+
 
     teste = Game.objects.values('image_url').first().get('image_url')
 

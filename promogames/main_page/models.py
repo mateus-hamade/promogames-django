@@ -36,3 +36,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.comment
+    
+class Historical(models.Model):
+    title = models.CharField(max_length=200, unique=True)
+    lowest_price = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.lowest_price
