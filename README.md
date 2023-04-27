@@ -15,3 +15,5 @@
 ```
 >> python manage.py runserver
 ```
+### Captura de tela 📸
+![127 0 0 1_8000_](https://user-images.githubusercontent.com/88840131/234990461-56090a1f-8fc8-489a-be11-9d30deba7349.png)
